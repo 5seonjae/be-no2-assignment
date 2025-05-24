@@ -2,7 +2,6 @@ package com.example.schedule.repository;
 
 import com.example.schedule.dto.ScheduleListResponseDto;
 import com.example.schedule.dto.ScheduleRequestDto;
-import com.example.schedule.dto.ScheduleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
