@@ -7,7 +7,7 @@ Spring Boot + JDBC 기반 일정 관리 API입니다.
 - https://documenter.getpostman.com/view/44606074/2sB2qcBKtT
 
 ## ERD
-![Schedule](https://github.com/user-attachments/assets/8db77260-d539-46fa-8312-0a686589628e)
+![Schedule](https://github.com/user-attachments/assets/549a30ba-073e-4b3f-b897-214dfca1dbde)
 
 ---
 
