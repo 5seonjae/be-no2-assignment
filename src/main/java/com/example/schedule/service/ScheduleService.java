@@ -22,8 +22,8 @@ public class ScheduleService {
         return new ScheduleResponseDto(id, "일정이 성공적으로 등록되었습니다.");
     }
 
-    public List<ScheduleListResponseDto> getAllSchedules(String writer, String modifiedAt, String sort) {
-        return scheduleRepository.findAll(writer, modifiedAt, sort);
+    public List<ScheduleListResponseDto> getAllSchedules(String userName, String modifiedAt) {
+        return scheduleRepository.findAll(userName, modifiedAt);
     }
 
     public ScheduleListResponseDto getScheduleById(Long id) {

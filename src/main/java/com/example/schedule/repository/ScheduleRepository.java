@@ -23,34 +23,34 @@ public class ScheduleRepository {
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
     }
 
-    public List<ScheduleListResponseDto> findAll(String writer, String modifiedAt, String sort) {
-        StringBuilder sql = new StringBuilder("SELECT id, title, writer, created_at, updated_at FROM schedule WHERE 1=1");
+    public List<ScheduleListResponseDto> findAll(String userName, String modifiedAt) {
+        StringBuilder sql = new StringBuilder("""
+        SELECT s.id, s.title, u.name AS user_name, s.created_at, s.updated_at
+        FROM schedule s
+        JOIN user u ON s.user_id = u.id
+        WHERE 1=1
+    """);
 
         List<Object> params = new ArrayList<>();
 
-        if (writer != null && !writer.isEmpty()) {
-            sql.append(" AND writer = ?");
-            params.add(writer);
+        if (userName != null && !userName.isEmpty()) {
+            sql.append(" AND u.name = ?");
+            params.add(userName);
         }
 
         if (modifiedAt != null && !modifiedAt.isEmpty()) {
-            sql.append(" AND DATE(updated_at) = ?");
+            sql.append(" AND DATE(s.updated_at) = ?");
             params.add(modifiedAt);
         }
 
-        if ("desc".equalsIgnoreCase(sort)) {
-            sql.append(" ORDER BY updated_at DESC");
-        } else {
-            sql.append(" ORDER BY updated_at ASC");
-        }
+        // 정렬 조건 고정: 항상 내림차순
+        sql.append(" ORDER BY s.updated_at DESC");
 
-        return jdbcTemplate.query(
-                sql.toString(),
-                params.toArray(),
-                (rs, rowNum) -> new ScheduleListResponseDto(
+        return jdbcTemplate.query(sql.toString(), params.toArray(), (rs, rowNum) ->
+                new ScheduleListResponseDto(
                         rs.getLong("id"),
                         rs.getString("title"),
-                        rs.getString("writer"),
+                        rs.getString("user_name"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getTimestamp("updated_at").toLocalDateTime()
                 )

@@ -1,3 +1,6 @@
+use schedule;
+
+-- schedule 테이블 생성
 CREATE TABLE schedule (
       id BIGINT AUTO_INCREMENT PRIMARY KEY,
       title VARCHAR(200) NOT NULL,
@@ -6,3 +9,6 @@ CREATE TABLE schedule (
       created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- 데이터베이스 초기화
+DROP TABLE IF EXISTS schedule;

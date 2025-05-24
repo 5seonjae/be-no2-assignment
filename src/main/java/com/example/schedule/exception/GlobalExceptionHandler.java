@@ -1,7 +1,10 @@
 package com.example.schedule.exception;
 
+import com.example.schedule.dto.MessageResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,6 +21,13 @@ public class GlobalExceptionHandler {
         error.put("status", 404);
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MessageResponseDto> handleValidationException(MethodArgumentNotValidException ex) {
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        String message = (fieldError != null) ? fieldError.getDefaultMessage() : "잘못된 요청입니다.";
+        return ResponseEntity.badRequest().body(new MessageResponseDto(message));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

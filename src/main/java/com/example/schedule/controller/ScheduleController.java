@@ -2,6 +2,7 @@ package com.example.schedule.controller;
 
 import com.example.schedule.dto.*;
 import com.example.schedule.service.ScheduleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,28 +21,31 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
+    // 일정 생성
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody @Valid ScheduleRequestDto dto) {
         ScheduleResponseDto response = scheduleService.createSchedule(dto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // 전체 일정 조회
     @GetMapping
     public ResponseEntity<List<ScheduleListResponseDto>> getSchedules(
-            @RequestParam(required = false) String writer,
-            @RequestParam(required = false) String modifiedAt,
-            @RequestParam(required = false, defaultValue = "desc") String sort) {
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) String modifiedAt) {
 
-        List<ScheduleListResponseDto> schedules = scheduleService.getAllSchedules(writer, modifiedAt, sort);
+        List<ScheduleListResponseDto> schedules = scheduleService.getAllSchedules(userName, modifiedAt);
         return ResponseEntity.ok(schedules);
     }
 
+    // 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleListResponseDto> getSchedule(@PathVariable Long id) {
         ScheduleListResponseDto response = scheduleService.getScheduleById(id);
         return ResponseEntity.ok(response);
     }
 
+    // 일정 수정
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleListResponseDto> updateSchedule(
             @PathVariable Long id,
@@ -50,6 +54,7 @@ public class ScheduleController {
         return ResponseEntity.ok(response);
     }
 
+    // 일정 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteSchedule(
             @PathVariable Long id,
